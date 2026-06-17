@@ -1,27 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-    StyleSheet, 
-    Text, 
-    View, 
-    FlatList, 
-    TextInput, 
-    TouchableOpacity, 
-    Keyboard, 
-    Animated, 
-    Platform 
-} from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, 
+        TouchableOpacity, Keyboard, Animated, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function ChatScreen() {
-    const [messages, setMessages] = useState([
-        {id: '1', senderId: 'user_lain', text: 'Hai! jangan lupa project uas', timestamp: '20:00'},
-        {id: '2', senderId: 'kamu', text: 'On Progress ya', timestamp: '20:05'},
-    ]);
+import { sendMessage, listenMessages } from '../services/chatService';
 
+export default function ChatScreen() {
+    const [messages, setMessages] = useState([]);
     const [inputText, setInputText] = useState('');
     const paddingBottom = useRef(new Animated.Value(0)).current;
 
+    //dummy id 
+    const chatRoomId = 'room_uas_kelompok2';
+    const myId = 'kamu';
+    const receiverId = 'user_lain';
+    
     useEffect(() => {
+        const unsubscribeFirestore = listenMessages(chatRoomId, (data) => {
+            setMessages(data);
+        });
+        
         // Mendengarkan event keyboard muncul
         const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
         const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
@@ -43,10 +41,23 @@ export default function ChatScreen() {
         });
 
         return () => {
+            unsubscribeFirestore();
             showSubscription.remove();
             hideSubscription.remove();
         };
     }, []);
+
+    const handleSend = async () => {
+        if (inputText.trim() === '') return;
+        
+        const textToSend = inputText;
+        setInputText('');
+
+        const result = await sendMessage(chatRoomId, myId, receiverId, textToSend);
+        if (!result.success){
+            alert('Gagal mengirim pesan, periksa koneksi atau setup Firebase anggota 2');
+        }
+    };
 
     const renderMessageItem = ({ item }) => {
         const isMyMessage = item.senderId === 'kamu';
@@ -78,7 +89,7 @@ export default function ChatScreen() {
                         value={inputText} 
                         onChangeText={setInputText}
                     />
-                    <TouchableOpacity style={styles.sendButton}>
+                    <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
                         <Text style={{color: '#fff'}}>Kirim</Text>
                     </TouchableOpacity>
                 </View>

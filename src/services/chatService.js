@@ -1,50 +1,29 @@
-import { db } from './firebaseconfig';
-import { collection, addDoc, query, orderBy, 
-        onSnapshot, serverTimestamp } from 'firebase/firestore';
 
-// mengirim pesan
+
+// mengirim pesan (simulasi)
 export const sendMessage = async (chatRoomId, senderId, receiverId, Text, messageType = 'text', mediaUrl = '') => {
         try {
-            const encryptedText = Text; 
-
-            const messageData = {
-                senderId,
-                receiverId,
-                text: encryptedText,
-                messageType,
-                mediaUrl,
-                status: 'sent',
-                timestamp: serverTimestamp(),
-            };
-
-            const messageRef = collection(db, 'chats', chatRoomId, 'messages');
-            await addDoc(messageRef, messageData);
-
-            return {success : true};
-        } catch (error){
-            console.error("Gagal mengirim pesan: ", error);
-            return {success : false, error};
-        }
+        console.log(`[Mock Firebase] Pesan dikirim ke ${chatRoomId}: "${Text}"`);
+        return { success: true };
+    } catch (error) {
+        console.error("Gagal mengirim pesan simulasi: ", error);
+        return { success: false, error };
+    }
 };
 
-// fungsi real time listener
+// fungsi real time listener (simulasi)
 export const listenMessages = (chatRoomId, callBack) => {
-    const messageRef = collection(db, 'chats', chatRoomId, 'messages');
-    const q = query(messageRef, orderBy('timestamp', 'asc'));
+   console.log(`[Mock Firebase] Mulai mendengarkan room: ${chatRoomId}`);
+    
+    // data dummy awal agar FlatList tidak kosong saat dibuka
+    const dummyMessages = [
+        { id: '1', senderId: 'user_lain', text: 'Hai! jangan lupa project uas', timestamp: '20:00' },
+        { id: '2', senderId: 'kamu', text: 'On Progress ya', timestamp: '20:05' },
+    ];
+    
+    callBack(dummyMessages);
 
-    return onSnapshot(q, (snapshot) => {
-        const messages = snapshot.docs.map((doc) => {
-            const data = doc.data();
-
-            const decryptedText = data.text;
-
-            return {
-                id: doc.id,
-                ...data,
-                text: decryptedText,
-            };
-        });
-
-        callBack(messages);
-    });
+    return () => {
+        console.log(`[Mock Firebase] Berhenti mendengarkan room: ${chatRoomId}`);
+    };
 };
