@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import FeedScreen from './src/screens/FeedScreen';
@@ -18,4 +16,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F8FA',
   },
 });
->>>>>>> Stashed changes
+
+import React from 'react';
+import ChatScreen from './src/screens/ChatScreen';
+
+export default function App() {
+  return (
+    <ChatScreen />
+  );
+}
+
