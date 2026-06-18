@@ -69,3 +69,25 @@ export const toggleFollowUser = async (currentUserId, targetUserId, isFollowing)
     throw error;
   }
 };
+
+export const addCommentToPost = async (postId, currentUserId, username, commentText) => {
+  try {
+    const postRef = doc(db, 'posts', postId);
+    const newComment = {
+      commentId: `comment_${Date.now()}`,
+      userId: currentUserId,
+      username: username,
+      text: commentText,
+      createdAt: new Date().toISOString()
+    };
+
+    await updateDoc(postRef, {
+      comments: arrayUnion(newComment)
+    });
+
+    return newComment;
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    throw error;
+  }
+};

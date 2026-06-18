@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView, FlatList, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import PostCard from '../components/PostCard';
 import { dummyPosts } from '../utils/dummyData';
-import { fetchFeedPosts, toggleLikePost } from '../services/firebaseService';
+import { fetchFeedPosts, toggleLikePost, addCommentToPost } from '../services/firebaseService';
 
 export default function FeedScreen() {
   const [posts, setPosts] = useState([]);
@@ -89,13 +89,56 @@ export default function FeedScreen() {
     }
   };
 
+  const handleCommentSubmit = async (postId, commentText) => {
+    if (!commentText.trim()) return;
+
+    const currentUserId = "user_ana_id";
+    const currentUsername = "ana_guitarist";
+    
+    const targetPost = posts.find((p) => p.id === postId || p.postId === postId);
+    if (!targetPost) return;
+
+    const newCommentDummy = {
+      commentId: `comment_${Date.now()}`,
+      userId: currentUserId,
+      username: currentUsername,
+      text: commentText,
+      createdAt: new Date().toISOString()
+    };
+
+    setPosts((prevPosts) =>
+      prevPosts.map((post) => {
+        const isTarget = post.id === postId || post.postId === postId;
+        if (isTarget) {
+          const currentComments = post.comments || [];
+          return { ...post, comments: [...currentComments, newCommentDummy] };
+        }
+        return post;
+      })
+    );
+
+    if (!useFallbackDummy) {
+      try {
+        await addCommentToPost(postId, currentUserId, currentUsername, commentText);
+      } catch (error) {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) => {
+            const isTarget = post.id === postId || post.postId === postId;
+            if (isTarget) return targetPost;
+            return post;
+          })
+        );
+      }
+    }
+  };
+
   const renderItem = ({ item }) => (
     <PostCard
       item={item}
       currentUserId="user_ana_id"
       onLikePress={() => handleLike(item.id || item.postId)}
       onFollowPress={(userId) => console.log('Follow clicked:', userId)}
-      onCommentPress={(postId) => console.log('Comment clicked:', postId)}
+      onCommentPress={(postId, commentText) => handleCommentSubmit(postId, commentText)}
     />
   );
 
