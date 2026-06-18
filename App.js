@@ -32,6 +32,8 @@ const styles = StyleSheet.create({
 
 import React from 'react';
 import ChatScreen from './src/screens/ChatScreen';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import SocialScreen from './src/screens/SocialScreen';
 
 export default function App() {
   const handleFollow = (userId) => console.log('Follow user:', userId);
@@ -49,6 +51,7 @@ export default function App() {
           onCommentPress={handleComment}
         />
       </ScrollView>
+      <SocialScreen />
     </SafeAreaView>
   );
 }
