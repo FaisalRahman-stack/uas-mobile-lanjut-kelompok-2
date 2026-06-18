@@ -60,7 +60,7 @@ export default function FeedScreen() {
       currentUserId="user_ana_id"
       onLikePress={() => handleLike(item.id || item.postId)}
       onFollowPress={(userId) => console.log('Follow clicked:', userId)}
-      onCommentPress={(postId, commentText) => handleCommentSubmit(postId, commentText)}
+      onCommentPress={(postId) => handleComment(postId)}
     />
   );
 
@@ -72,10 +72,10 @@ export default function FeedScreen() {
         keyExtractor={(item) => item.id || item.postId}
         refreshing={isRefreshing}
         onRefresh={handleRefresh}
-        onEndReached={handleEndReached}
+        onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={
-          isLoading && !isRefreshing ? (
+          isLoadingMore && !isRefreshing ? (
             <View style={styles.footerLoader}>
               <ActivityIndicator size="small" color="#1DA1F2" />
             </View>

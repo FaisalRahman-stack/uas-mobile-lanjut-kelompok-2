@@ -1,5 +1,5 @@
-import { db } from '../config/firebase'; 
-import { collection, query, orderBy, limit, startAfter, getDocs, doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+// import { db } from '../config/firebase'; 
+// import { collection, query, orderBy, limit, startAfter, getDocs, doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 
 export const fetchFeedPosts = async (lastVisiblePost = null, pageSize = 10) => {
   try {
