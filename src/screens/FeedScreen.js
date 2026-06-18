@@ -57,10 +57,10 @@ export default function FeedScreen() {
   const renderItem = ({ item }) => (
     <PostCard
       item={item}
-      currentUserId={currentUserId}
-      onFollowPress={handleFollow}
-      onLikePress={handleLike}
-      onCommentPress={handleComment}
+      currentUserId="user_ana_id"
+      onLikePress={() => handleLike(item.id || item.postId)}
+      onFollowPress={(userId) => console.log('Follow clicked:', userId)}
+      onCommentPress={(postId, commentText) => handleCommentSubmit(postId, commentText)}
     />
   );
 
@@ -69,20 +69,18 @@ export default function FeedScreen() {
       <FlatList
         data={posts}
         renderItem={renderItem}
-        keyExtractor={(item) => item.postId}
-        maxToRenderPerBatch={10}
-        windowSize={5}
-        removeClippedSubviews={true}
-        initialNumToRender={5}
-        onRefresh={handleRefresh}
+        keyExtractor={(item) => item.id || item.postId}
         refreshing={isRefreshing}
-        onEndReached={handleLoadMore}
+        onRefresh={handleRefresh}
+        onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={isLoadingMore ? (
-          <View style={styles.footerLoader}>
-            <ActivityIndicator size="small" color="#1DA1F2" />
-          </View>
-        ) : null}
+        ListFooterComponent={
+          isLoading && !isRefreshing ? (
+            <View style={styles.footerLoader}>
+              <ActivityIndicator size="small" color="#1DA1F2" />
+            </View>
+          ) : null
+        }
       />
     </SafeAreaView>
   );
@@ -94,7 +92,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F8FA',
   },
   footerLoader: {
-    paddingVertical: 20,
+    paddingVertical: 15,
     alignItems: 'center',
   },
 });
