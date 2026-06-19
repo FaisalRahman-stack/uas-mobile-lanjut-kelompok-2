@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { SafeAreaView, FlatList, StyleSheet, ActivityIndicator, View, Text } from 'react-native';
 import PostCard from '../components/PostCard';
 import { dummyPosts } from '../utils/dummyData';
+import { theme } from '../utils/theme';
 
 export default function FeedScreen() {
   const [posts, setPosts] = useState(dummyPosts);
@@ -89,10 +90,16 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F8FA',
+    backgroundColor: theme.background, // <-- Panggil di sini
+    padding: 16,
   },
-  footerLoader: {
-    paddingVertical: 15,
-    alignItems: 'center',
+  title: {
+    color: theme.textPrimary, // <-- Panggil di sini
+    fontSize: 18,
+    fontWeight: 'bold',
   },
+  subtitle: {
+    color: theme.textSecondary, // <-- Panggil di sini
+    fontSize: 14,
+  }
 });

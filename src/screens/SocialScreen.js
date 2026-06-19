@@ -3,6 +3,7 @@ import { SafeAreaView, View, Text, StyleSheet, TextInput, FlatList, TouchableOpa
 import { Image } from 'expo-image';
 import { dummyUsers } from '../utils/userDummyData';
 import { toggleFollowUser } from '../services/firebaseService';
+import { theme } from '../utils/theme';
 
 export default function SocialScreen() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -117,24 +118,25 @@ export default function SocialScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: theme.background,
   },
   searchContainer: {
     padding: 16,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#E1E8ED',
+    borderBottomColor: theme.backgroundSecondary,
   },
   searchInput: {
-    backgroundColor: '#F5F8FA',
+    backgroundColor: theme.backgroundSecondary,
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
     fontSize: 14,
+    color: theme.textPrimary,
   },
   tabContainer: {
     flexDirection: 'row',
     borderBottomWidth: 0.5,
-    borderBottomColor: '#E1E8ED',
+    borderBottomColor: theme.backgroundSecondary,
   },
   tabButton: {
     flex: 1,
@@ -143,15 +145,15 @@ const styles = StyleSheet.create({
   },
   activeTabButton: {
     borderBottomWidth: 2,
-    borderBottomColor: '#1DA1F2',
+    borderBottomColor: theme.primary,
   },
   tabText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#657786',
+    color: theme.textSecondary,
   },
   activeTabText: {
-    color: '#1DA1F2',
+    color: theme.primary,
   },
   listContent: {
     paddingVertical: 8,
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#F5F8FA',
+    backgroundColor: theme.backgroundSecondary,
   },
   textSection: {
     marginLeft: 12,
@@ -181,11 +183,11 @@ const styles = StyleSheet.create({
   displayNameText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#14171A',
+    color: theme.textPrimary,
   },
   usernameText: {
     fontSize: 13,
-    color: '#657786',
+    color: theme.textSecondary,
     marginTop: 2,
   },
   actionButton: {
@@ -195,27 +197,27 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   followBtn: {
-    backgroundColor: '#14171A',
-    borderColor: '#14171A',
+    backgroundColor: theme.primary,
+    borderColor: theme.primary,
   },
   followingBtn: {
-    backgroundColor: '#ffffff',
-    borderColor: '#AAB8C2',
+    backgroundColor: theme.background,
+    borderColor: theme.secondary,
   },
   actionButtonText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#ffffff',
+    color: theme.background,
   },
   followingBtnText: {
-    color: '#657786',
+    color: theme.textSecondary,
   },
   emptyContainer: {
     alignItems: 'center',
     paddingTop: 40,
   },
   emptyText: {
-    color: '#657786',
+    color: theme.textSecondary,
     fontSize: 14,
   },
 });

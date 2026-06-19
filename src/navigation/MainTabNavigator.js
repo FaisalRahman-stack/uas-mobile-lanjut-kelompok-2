@@ -3,10 +3,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FeedScreen from '../screens/FeedScreen';
 import SocialScreen from '../screens/SocialScreen';
 import { View, Text } from 'react-native';
+import { theme } from '../utils/theme';
 
 const ProfileScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
-    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Profile Screen</Text>
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background }}>
+    <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.textPrimary }}>Profile Screen</Text>
   </View>
 );
 
@@ -17,8 +18,8 @@ export default function MainTabNavigator() {
     <Tab.Navigator 
       screenOptions={{ 
         headerShown: false,
-        tabBarActiveTintColor: '#1DA1F2',
-        tabBarInactiveTintColor: '#657786',
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.inactive,
       }}
     >
       <Tab.Screen 

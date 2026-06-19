@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, FlatList, TextInput,
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { sendMessage, listenMessages } from '../services/chatService';
+import { theme } from '../utils/theme';
 
 export default function ChatScreen() {
     const [messages, setMessages] = useState([]);
@@ -99,23 +100,60 @@ export default function ChatScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#f5f5f5' },
-    mainView: { flex: 1 },
-    messageContainer: { marginVertical: 4, flexDirection: 'row' },
-    myMessageContainer: { justifyContent: 'flex-end' },
-    theirMessageContainer: { justifyContent: 'flex-start' },
-    messageBubble: { padding: 12, borderRadius: 16, maxWidth: '80%' },
-    myBubble: { backgroundColor: '#007AFF' },
-    theirBubble: { backgroundColor: '#e5e5ea' },
-    myText: { color: '#fff' },
-    theirText: { color: '#000' },
-    inputContainer: { 
-        flexDirection: 'row', 
-        padding: 10, 
-        backgroundColor: '#fff', 
-        borderTopWidth: 1, 
-        borderColor: '#eee' 
-    },
-    input: { flex: 1, backgroundColor: '#f0f0f0', borderRadius: 20, paddingHorizontal: 15, marginRight: 10 },
-    sendButton: { backgroundColor: '#007AFF', borderRadius: 20, paddingHorizontal: 20, justifyContent: 'center' }
+  container: { 
+    flex: 1, 
+    backgroundColor: theme.background 
+  },
+  mainView: { 
+    flex: 1 
+  },
+  messageContainer: { 
+    marginVertical: 4, 
+    flexDirection: 'row',
+    paddingHorizontal: 10 
+  },
+  myMessageContainer: { 
+    justifyContent: 'flex-end' 
+  },
+  theirMessageContainer: { 
+    justifyContent: 'flex-start' 
+  },
+  messageBubble: { 
+    padding: 12, 
+    borderRadius: 16, 
+    maxWidth: '80%' 
+  },
+  myBubble: { 
+    backgroundColor: theme.primary 
+  },
+  theirBubble: { 
+    backgroundColor: theme.backgroundSecondary 
+  },
+  myText: { 
+    color: theme.background 
+  },
+  theirText: { 
+    color: theme.textPrimary 
+  },
+  inputContainer: { 
+    flexDirection: 'row', 
+    padding: 10, 
+    backgroundColor: theme.background, 
+    borderTopWidth: 1, 
+    borderColor: theme.backgroundSecondary 
+  },
+  input: { 
+    flex: 1, 
+    backgroundColor: theme.backgroundSecondary, 
+    borderRadius: 20, 
+    paddingHorizontal: 15, 
+    marginRight: 10,
+    color: theme.textPrimary 
+  },
+  sendButton: { 
+    backgroundColor: theme.primary, 
+    borderRadius: 20, 
+    paddingHorizontal: 20, 
+    justifyContent: 'center' 
+  }
 });
