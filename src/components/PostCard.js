@@ -1,13 +1,16 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
+import { useSocialStore } from '../store/useSocialStore';
 
-// Komponen menggunakan React.memo untuk optimasi scroll di FlatList
 const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onCommentPress }) => {
+  // Cek apakah user pembuat postingan ada di daftar following
+  const { followingList } = useSocialStore();
+  const isFollowing = followingList.includes(item.userId);
+
   // Cek apakah user saat ini sudah menyukai postingan ini
   const isLiked = item.likes?.includes(currentUserId) || false;
   
-  // Format tanggal postingan
   const formatPostDate = (timestamp) => {
     if (!timestamp) return '';
     const date = new Date(timestamp);
@@ -16,7 +19,6 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
 
   return (
     <View style={styles.cardContainer}>
-      {/* Header: Profil Pembuat Post & Tombol Follow */}
       <View style={styles.headerContainer}>
         <View style={styles.creatorProfile}>
           <Image 
@@ -31,21 +33,20 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
           </View>
         </View>
         
-        {/* Tombol Follow hanya muncul jika ini postingan orang lain */}
         {item.userId !== currentUserId && (
           <TouchableOpacity 
-            style={[styles.actionButton, isLiked ? styles.activeButton : styles.inactiveButton]}
+            // Menggunakan isFollowing untuk menentukan warna tombol bawaan Anda
+            style={[styles.actionButton, isFollowing ? styles.activeButton : styles.inactiveButton]}
             onPress={() => onFollowPress(item.userId)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.actionButtonText, isLiked && styles.activeButtonText]}>
-              Follow
+            <Text style={[styles.actionButtonText, isFollowing && styles.activeButtonText]}>
+              {isFollowing ? 'Following' : 'Follow'}
             </Text>
           </TouchableOpacity>
         )}
       </View>
 
-      {/* Gambar Utama Postingan */}
       <Image 
         source={{ uri: item.imageUrl }} 
         style={styles.mainPostImage}
@@ -54,7 +55,6 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
         cachePolicy="disk"
       />
 
-      {/* Bar Tombol Interaksi */}
       <View style={styles.interactionButtonBar}>
         <View style={styles.leftInteractionGroup}>
           <TouchableOpacity 
@@ -81,7 +81,6 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
         </View>
       </View>
 
-      {/* Caption Postingan */}
       <View style={styles.metadataContentContainer}>
         <Text style={styles.captionTypography} numberOfLines={3}>
           <Text style={styles.boldUsernameContext}>{item.username} </Text>

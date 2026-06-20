@@ -1,35 +1,29 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { dummyUsers } from '../utils/userDummyData';
 import { toggleFollowUser } from '../services/firebaseService';
 import { theme } from '../utils/theme';
+import { useSocialStore } from '../store/useSocialStore';
 
 export default function SocialScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('followers');
-  const [followingList, setFollowingList] = useState(['user_002', 'user_004']);
   const [useFallbackDummy, setUseFallbackDummy] = useState(true);
+  
+  const { followingList, toggleFollow } = useSocialStore();
 
   const handleFollowToggle = async (targetUserId) => {
     const currentUserId = "user_ana_id";
     const isCurrentlyFollowing = followingList.includes(targetUserId);
 
-    setFollowingList((prevList) =>
-      isCurrentlyFollowing
-        ? prevList.filter((id) => id !== targetUserId)
-        : [...prevList, targetUserId]
-    );
+    toggleFollow(targetUserId);
 
     if (!useFallbackDummy) {
       try {
         await toggleFollowUser(currentUserId, targetUserId, isCurrentlyFollowing);
       } catch (error) {
-        setFollowingList((prevList) =>
-          isCurrentlyFollowing
-            ? [...prevList, targetUserId]
-            : prevList.filter((id) => id !== targetUserId)
-        );
+        toggleFollow(targetUserId);
       }
     }
   };

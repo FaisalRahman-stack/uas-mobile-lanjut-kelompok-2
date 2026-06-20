@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { SafeAreaView, FlatList, StyleSheet, ActivityIndicator, View, Text } from 'react-native';
+import { SafeAreaView, FlatList, StyleSheet, ActivityIndicator, View } from 'react-native';
 import PostCard from '../components/PostCard';
 import { dummyPosts } from '../utils/dummyData';
 import { theme } from '../utils/theme';
+import { useSocialStore } from '../store/useSocialStore';
 
 export default function FeedScreen() {
   const [posts, setPosts] = useState(dummyPosts);
@@ -10,9 +11,7 @@ export default function FeedScreen() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const currentUserId = "user_ana_id";
 
-  const handleFollow = useCallback((userId) => {
-    console.log("Follow target user ID:", userId);
-  }, []);
+  const { toggleFollow } = useSocialStore();
 
   const handleLike = useCallback((postId) => {
     setPosts(prevPosts => 
@@ -58,9 +57,9 @@ export default function FeedScreen() {
   const renderItem = ({ item }) => (
     <PostCard
       item={item}
-      currentUserId="user_ana_id"
+      currentUserId={currentUserId}
       onLikePress={() => handleLike(item.id || item.postId)}
-      onFollowPress={(userId) => console.log('Follow clicked:', userId)}
+      onFollowPress={(userId) => toggleFollow(userId)}
       onCommentPress={(postId) => handleComment(postId)}
     />
   );
@@ -78,7 +77,7 @@ export default function FeedScreen() {
         ListFooterComponent={
           isLoadingMore && !isRefreshing ? (
             <View style={styles.footerLoader}>
-              <ActivityIndicator size="small" color="#1DA1F2" />
+              <ActivityIndicator size="small" color={theme.primary} />
             </View>
           ) : null
         }
@@ -90,16 +89,11 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.background, // <-- Panggil di sini
+    backgroundColor: theme.background, 
     padding: 16,
   },
-  title: {
-    color: theme.textPrimary, // <-- Panggil di sini
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    color: theme.textSecondary, // <-- Panggil di sini
-    fontSize: 14,
+  footerLoader: {
+    paddingVertical: 20,
+    alignItems: 'center',
   }
 });
