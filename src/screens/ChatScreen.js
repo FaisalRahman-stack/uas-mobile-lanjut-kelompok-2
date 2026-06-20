@@ -2,16 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, 
         TouchableOpacity, Keyboard, Animated, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { sendMessage, listenMessages } from '../services/chatService';
-import { theme } from '../utils/theme';
+import { useTheme } from '../utils/theme';
 
 export default function ChatScreen({ route, navigation }) {
+    const theme = useTheme();
+    const styles = getStyles(theme);
+
     const [messages, setMessages] = useState([]);
     const [inputText, setInputText] = useState('');
     const paddingBottom = useRef(new Animated.Value(0)).current;
 
-    // Ambil data dari params
     const { targetUserId, userName } = route.params || {};
     
     const chatRoomId = targetUserId ? `room_${targetUserId}` : 'room_default';
@@ -19,7 +20,6 @@ export default function ChatScreen({ route, navigation }) {
     const receiverId = targetUserId || 'user_lain';
     
     useEffect(() => {
-        // Mengatur judul header secara dinamis
         if (userName) {
             navigation.setOptions({ title: userName });
         }
@@ -78,7 +78,6 @@ export default function ChatScreen({ route, navigation }) {
     };
 
     return (
-        // Menggunakan edges bottom agar tidak menimpa navigasi Android
         <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
             <Animated.View style={[styles.mainView, { paddingBottom }]}>
                 <FlatList 
@@ -94,6 +93,7 @@ export default function ChatScreen({ route, navigation }) {
                     <TextInput 
                         style={styles.input} 
                         placeholder='Ketik pesan...'
+                        placeholderTextColor={theme.textSecondary}
                         value={inputText} 
                         onChangeText={setInputText}
                     />
@@ -106,7 +106,7 @@ export default function ChatScreen({ route, navigation }) {
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: theme.background 
@@ -148,7 +148,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.background, 
     borderTopWidth: 1, 
     borderColor: theme.backgroundSecondary,
-    // Menambahkan paddingBottom ekstra untuk perangkat Android dengan gestur bar
     paddingBottom: Platform.OS === 'android' ? 10 : 10 
   },
   input: { 

@@ -4,11 +4,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { dummyUsers } from '../utils/userDummyData';
 import { toggleFollowUser } from '../services/firebaseService';
-import { theme } from '../utils/theme';
+import { useTheme } from '../utils/theme';
 import { useSocialStore } from '../store/useSocialStore';
 import { useNavigation } from '@react-navigation/native';
 
 export default function SocialScreen() {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('followers');
   const [useFallbackDummy, setUseFallbackDummy] = useState(true);
@@ -87,6 +90,7 @@ export default function SocialScreen() {
         <TextInput
           style={styles.searchInput}
           placeholder="Cari pengguna..."
+          placeholderTextColor={theme.textSecondary}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -126,109 +130,109 @@ export default function SocialScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.background,
+const getStyles = (theme) => StyleSheet.create({
+  container: { 
+    flex: 1, 
+    backgroundColor: theme.background 
   },
-  searchContainer: {
-    padding: 16,
-    borderBottomWidth: 0.5,
-    borderBottomColor: theme.backgroundSecondary,
+  searchContainer: { 
+    padding: 16, 
+    borderBottomWidth: 0.5, 
+    borderBottomColor: theme.backgroundSecondary 
   },
-  searchInput: {
-    backgroundColor: theme.backgroundSecondary,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    fontSize: 14,
-    color: theme.textPrimary,
+  searchInput: { 
+    backgroundColor: theme.backgroundSecondary, 
+    paddingHorizontal: 16, 
+    paddingVertical: 10, 
+    borderRadius: 20, 
+    fontSize: 14, 
+    color: theme.textPrimary 
   },
-  tabContainer: {
-    flexDirection: 'row',
-    borderBottomWidth: 0.5,
-    borderBottomColor: theme.backgroundSecondary,
+  tabContainer: { 
+    flexDirection: 'row', 
+    borderBottomWidth: 0.5, 
+    borderBottomColor: theme.backgroundSecondary 
   },
-  tabButton: {
-    flex: 1,
-    paddingVertical: 14,
-    alignItems: 'center',
+  tabButton: { 
+    flex: 1, 
+    paddingVertical: 14, 
+    alignItems: 'center' 
   },
-  activeTabButton: {
-    borderBottomWidth: 2,
-    borderBottomColor: theme.primary,
+  activeTabButton: { 
+    borderBottomWidth: 2, 
+    borderBottomColor: theme.primary 
   },
-  tabText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: theme.textSecondary,
+  tabText: { 
+    fontSize: 14, 
+    fontWeight: '600', 
+    color: theme.textSecondary 
   },
-  activeTabText: {
-    color: theme.primary,
+  activeTabText: { 
+    color: theme.primary 
   },
-  listContent: {
-    paddingVertical: 8,
+  listContent: { 
+    paddingVertical: 8 
   },
-  userCard: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+  userCard: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    paddingHorizontal: 16, 
+    paddingVertical: 12 
   },
-  profileSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
+  profileSection: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    flex: 1 
   },
-  avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: theme.backgroundSecondary,
+  avatar: { 
+    width: 44, 
+    height: 44, 
+    borderRadius: 22, 
+    backgroundColor: theme.backgroundSecondary 
   },
-  textSection: {
-    marginLeft: 12,
-    flex: 1,
+  textSection: { 
+    marginLeft: 12, 
+    flex: 1 
   },
-  displayNameText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: theme.textPrimary,
+  displayNameText: { 
+    fontSize: 14, 
+    fontWeight: '700', 
+    color: theme.textPrimary 
   },
-  usernameText: {
-    fontSize: 13,
-    color: theme.textSecondary,
-    marginTop: 2,
+  usernameText: { 
+    fontSize: 13, 
+    color: theme.textSecondary, 
+    marginTop: 2 
   },
-  actionButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 16,
-    borderWidth: 1,
+  actionButton: { 
+    paddingHorizontal: 16, 
+    paddingVertical: 6, 
+    borderRadius: 16, 
+    borderWidth: 1 
   },
-  followBtn: {
-    backgroundColor: theme.primary,
-    borderColor: theme.primary,
+  followBtn: { 
+    backgroundColor: theme.primary, 
+    borderColor: theme.primary 
   },
-  followingBtn: {
-    backgroundColor: theme.background,
-    borderColor: theme.secondary,
+  followingBtn: { 
+    backgroundColor: theme.background, 
+    borderColor: theme.secondary 
   },
-  actionButtonText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: theme.background,
+  actionButtonText: { 
+    fontSize: 13, 
+    fontWeight: '600', 
+    color: theme.background 
   },
-  followingBtnText: {
-    color: theme.textSecondary,
+  followingBtnText: { 
+    color: theme.textSecondary 
   },
-  emptyContainer: {
-    alignItems: 'center',
-    paddingTop: 40,
+  emptyContainer: { 
+    alignItems: 'center', 
+    paddingTop: 40 
   },
-  emptyText: {
-    color: theme.textSecondary,
-    fontSize: 14,
+  emptyText: { 
+    color: theme.textSecondary, 
+    fontSize: 14 
   },
 });

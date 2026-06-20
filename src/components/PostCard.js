@@ -3,9 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { useSocialStore } from '../store/useSocialStore';
 import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../utils/theme';
+import { useTheme } from '../utils/theme';
 
 const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onCommentPress }) => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+
   const { followingList } = useSocialStore();
   const isFollowing = followingList.includes(item.userId);
   const isLiked = item.likes?.includes(currentUserId) || false;
@@ -26,7 +29,6 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
             <Text style={styles.usernameText}>
               {item.displayName || item.username} 
             </Text>
-            {/* Tanggal dipindah ke sini, menggantikan tag */}
             <Text style={styles.dateText}>{formatPostDate(item.createdAt)}</Text>
           </View>
         </View>
@@ -53,7 +55,6 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
         cachePolicy="disk"
       />
 
-      {/* Interaction Bar */}
       <View style={styles.interactionButtonBar}>
         <View style={styles.leftInteractionGroup}>
           <TouchableOpacity style={styles.iconScaleButton} onPress={() => onLikePress(item.postId)}>
@@ -64,7 +65,6 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
             <Ionicons name="chatbubble-outline" size={22} color={theme.textSecondary} />
             <Text style={styles.interactionCounterText}>Komentar</Text>
           </TouchableOpacity>
-          {/* Tanggal di sebelah komentar sudah dihapus */}
         </View>
       </View>
 
@@ -80,7 +80,7 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
 
 PostCard.displayName = 'PostCard';
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   cardContainer: {
     backgroundColor: theme.background,
     marginBottom: 8,

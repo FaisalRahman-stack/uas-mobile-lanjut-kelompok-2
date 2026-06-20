@@ -3,27 +3,31 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
+
 import FeedScreen from '../screens/FeedScreen';
 import SocialScreen from '../screens/SocialScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import { theme } from '../utils/theme';
+import ChatListScreen from '../screens/ChatListScreen'; 
+import { useTheme } from '../utils/theme';
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
   const insets = useSafeAreaInsets();
+  const theme = useTheme();
 
   return (
     <Tab.Navigator 
       screenOptions={{ 
         headerShown: false,
         tabBarActiveTintColor: theme.primary,
-        tabBarInactiveTintColor: theme.inactive,
+        tabBarInactiveTintColor: theme.textSecondary,
         tabBarButton: (props) => (
           <TouchableOpacity {...props} activeOpacity={1} />
         ),
-
         tabBarStyle: { 
+          backgroundColor: theme.background,
+          borderTopColor: theme.backgroundSecondary,
           paddingBottom: insets.bottom > 0 ? insets.bottom : 10, 
           paddingTop: 5, 
           height: 60 + insets.bottom, 
@@ -50,6 +54,18 @@ export default function MainTabNavigator() {
           ),
         }} 
       />
+      
+      <Tab.Screen 
+        name="ChatListTab" 
+        component={ChatListScreen} 
+        options={{ 
+          title: 'Chats',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="chatbubbles-outline" color={color} size={size} />
+          ),
+        }} 
+      />
+
       <Tab.Screen 
         name="ProfileTab" 
         component={ProfileScreen} 

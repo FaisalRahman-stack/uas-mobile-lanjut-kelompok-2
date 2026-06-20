@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { theme } from '../utils/theme';
+import { useTheme } from '../utils/theme';
 
 export default function ProfileScreen() {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.coverPhoto} />
@@ -60,99 +63,99 @@ export default function ProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.background,
+const getStyles = (theme) => StyleSheet.create({
+  container: { 
+    flex: 1, 
+    backgroundColor: theme.background 
   },
-  coverPhoto: {
-    height: 120,
-    backgroundColor: theme.backgroundSecondary,
+  coverPhoto: { 
+    height: 120, 
+    backgroundColor: theme.backgroundSecondary 
   },
-  profileSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
+  profileSection: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    paddingHorizontal: 16 
   },
-  avatarContainer: {
-    padding: 4,
-    backgroundColor: theme.background,
-    borderRadius: 50,
-    marginTop: -30,
+  avatarContainer: { 
+    padding: 4, 
+    backgroundColor: theme.background, 
+    borderRadius: 50, 
+    marginTop: -30 
   },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: theme.primary,
+  avatar: { 
+    width: 80, 
+    height: 80, 
+    borderRadius: 40, 
+    backgroundColor: theme.primary 
   },
-  nameContainer: {
-    marginLeft: 8,
-    marginTop: 8,
-    flex: 1,
+  nameContainer: { 
+    marginLeft: 8, 
+    marginTop: 8, 
+    flex: 1 
   },
-  nameText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: theme.textPrimary,
+  nameText: { 
+    fontSize: 20, 
+    fontWeight: 'bold', 
+    color: theme.textPrimary 
   },
-  usernameText: {
-    fontSize: 14,
-    color: theme.textSecondary,
-    marginTop: 2,
+  usernameText: { 
+    fontSize: 14, 
+    color: theme.textSecondary, 
+    marginTop: 2 
   },
-  infoSection: {
-    paddingHorizontal: 16,
-    marginTop: 16,
+  infoSection: { 
+    paddingHorizontal: 16, 
+    marginTop: 16 
   },
-  bioText: {
-    fontSize: 14,
-    color: theme.textPrimary,
-    lineHeight: 20,
+  bioText: { 
+    fontSize: 14, 
+    color: theme.textPrimary, 
+    lineHeight: 20 
   },
-  statsContainer: {
-    flexDirection: 'row',
-    marginTop: 16,
+  statsContainer: { 
+    flexDirection: 'row', 
+    marginTop: 16 
   },
-  statBox: {
-    marginRight: 24,
-    flexDirection: 'row',
-    alignItems: 'baseline',
+  statBox: { 
+    marginRight: 24, 
+    flexDirection: 'row', 
+    alignItems: 'baseline' 
   },
-  statNumber: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: theme.textPrimary,
-    marginRight: 4,
+  statNumber: { 
+    fontSize: 16, 
+    fontWeight: 'bold', 
+    color: theme.textPrimary, 
+    marginRight: 4 
   },
-  statLabel: {
-    fontSize: 14,
-    color: theme.textSecondary,
+  statLabel: { 
+    fontSize: 14, 
+    color: theme.textSecondary 
   },
-  divider: {
-    height: 1,
-    backgroundColor: theme.backgroundSecondary,
-    marginVertical: 16,
+  divider: { 
+    height: 1, 
+    backgroundColor: theme.backgroundSecondary, 
+    marginVertical: 16 
   },
-  contentSection: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
+  contentSection: { 
+    paddingHorizontal: 16, 
+    paddingBottom: 24 
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: theme.textPrimary,
-    marginBottom: 12,
+  sectionTitle: { 
+    fontSize: 16, 
+    fontWeight: 'bold', 
+    color: theme.textPrimary, 
+    marginBottom: 12 
   },
-  mockPost: {
-    padding: 16,
-    backgroundColor: theme.backgroundSecondary,
-    borderRadius: 12,
-    marginBottom: 12,
+  mockPost: { 
+    padding: 16, 
+    backgroundColor: theme.backgroundSecondary, 
+    borderRadius: 12, 
+    marginBottom: 12 
   },
-  postText: {
-    color: theme.textPrimary,
-    fontSize: 14,
-    lineHeight: 20,
+  postText: { 
+    color: theme.textPrimary, 
+    fontSize: 14, 
+    lineHeight: 20 
   },
 });

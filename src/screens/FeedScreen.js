@@ -3,11 +3,13 @@ import { FlatList, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import PostCard from '../components/PostCard';
 import { dummyPosts } from '../utils/dummyData';
-import { theme } from '../utils/theme';
+import { useTheme } from '../utils/theme';
 import { useSocialStore } from '../store/useSocialStore';
 
 export default function FeedScreen() {
   const insets = useSafeAreaInsets();
+  const theme = useTheme();
+  const styles = getStyles(theme);
 
   const [posts, setPosts] = useState(dummyPosts);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -68,7 +70,6 @@ export default function FeedScreen() {
   );
 
   return (
-    // 4. Ganti pembungkus utama menjadi View dengan paddingTop dinamis
     <View style={[styles.container, { paddingTop: Math.max(0, insets.top - 10) }]}>
       <FlatList
         data={posts}
@@ -90,10 +91,10 @@ export default function FeedScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.background, 
+    backgroundColor: theme.background,
   },
   footerLoader: {
     paddingVertical: 20,
