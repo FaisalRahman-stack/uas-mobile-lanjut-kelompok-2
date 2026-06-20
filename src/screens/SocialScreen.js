@@ -1,17 +1,21 @@
 import React, { useState, useMemo } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { dummyUsers } from '../utils/userDummyData';
 import { toggleFollowUser } from '../services/firebaseService';
 import { theme } from '../utils/theme';
 import { useSocialStore } from '../store/useSocialStore';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SocialScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('followers');
   const [useFallbackDummy, setUseFallbackDummy] = useState(true);
-  
   const { followingList, toggleFollow } = useSocialStore();
+  const navigation = useNavigation();
+  
+  const insets = useSafeAreaInsets();
 
   const handleFollowToggle = async (targetUserId) => {
     const currentUserId = "user_ana_id";
@@ -52,20 +56,33 @@ export default function SocialScreen() {
             <Text style={styles.usernameText}>@{item.username}</Text>
           </View>
         </View>
-        <TouchableOpacity
-          style={[styles.actionButton, isFollowing ? styles.followingBtn : styles.followBtn]}
-          onPress={() => handleFollowToggle(item.userId)}
-        >
-          <Text style={[styles.actionButtonText, isFollowing && styles.followingBtnText]}>
-            {isFollowing ? 'Following' : 'Follow'}
-          </Text>
-        </TouchableOpacity>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity
+            style={[styles.actionButton, isFollowing ? styles.followingBtn : styles.followBtn, { marginRight: 8 }]}
+            onPress={() => handleFollowToggle(item.userId)}
+          >
+            <Text style={[styles.actionButtonText, isFollowing && styles.followingBtnText]}>
+              {isFollowing ? 'Following' : 'Follow'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.actionButton, { borderColor: theme.primary }]}
+            onPress={() => navigation.navigate('ChatRoom', { 
+              targetUserId: item.userId,
+              userName: item.displayName 
+            })}
+          >
+            <Text style={{ color: theme.primary, fontSize: 13, fontWeight: '600' }}>Chat</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={[styles.container, { paddingTop: Math.max(0, insets.top - 15) }]}>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -105,7 +122,7 @@ export default function SocialScreen() {
           </View>
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

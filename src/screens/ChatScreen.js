@@ -6,22 +6,28 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { sendMessage, listenMessages } from '../services/chatService';
 import { theme } from '../utils/theme';
 
-export default function ChatScreen() {
+export default function ChatScreen({ route, navigation }) {
     const [messages, setMessages] = useState([]);
     const [inputText, setInputText] = useState('');
     const paddingBottom = useRef(new Animated.Value(0)).current;
 
-    //dummy id 
-    const chatRoomId = 'room_uas_kelompok2';
-    const myId = 'kamu';
-    const receiverId = 'user_lain';
+    // Ambil data dari params
+    const { targetUserId, userName } = route.params || {};
+    
+    const chatRoomId = targetUserId ? `room_${targetUserId}` : 'room_default';
+    const myId = 'user_ana_id'; 
+    const receiverId = targetUserId || 'user_lain';
     
     useEffect(() => {
+        // Mengatur judul header secara dinamis
+        if (userName) {
+            navigation.setOptions({ title: userName });
+        }
+
         const unsubscribeFirestore = listenMessages(chatRoomId, (data) => {
             setMessages(data);
         });
         
-        // Mendengarkan event keyboard muncul
         const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
         const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
@@ -46,7 +52,7 @@ export default function ChatScreen() {
             showSubscription.remove();
             hideSubscription.remove();
         };
-    }, []);
+    }, [chatRoomId, userName, navigation]); 
 
     const handleSend = async () => {
         if (inputText.trim() === '') return;
@@ -56,12 +62,12 @@ export default function ChatScreen() {
 
         const result = await sendMessage(chatRoomId, myId, receiverId, textToSend);
         if (!result.success){
-            alert('Gagal mengirim pesan, periksa koneksi atau setup Firebase anggota 2');
+            alert('Gagal mengirim pesan, periksa koneksi atau setup Firebase');
         }
     };
 
     const renderMessageItem = ({ item }) => {
-        const isMyMessage = item.senderId === 'kamu';
+        const isMyMessage = item.senderId === myId;
         return (
             <View style={[styles.messageContainer, isMyMessage ? styles.myMessageContainer : styles.theirMessageContainer]}>
                 <View style={[styles.messageBubble, isMyMessage ? styles.myBubble : styles.theirBubble]}>
@@ -72,12 +78,13 @@ export default function ChatScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+        // Menggunakan edges bottom agar tidak menimpa navigasi Android
+        <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
             <Animated.View style={[styles.mainView, { paddingBottom }]}>
                 <FlatList 
                     style={{ flex: 1 }} 
                     data={messages} 
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.id || Math.random().toString()}
                     renderItem={renderMessageItem} 
                     contentContainerStyle={{ padding: 16 }}
                     keyboardShouldPersistTaps="handled"
@@ -91,7 +98,7 @@ export default function ChatScreen() {
                         onChangeText={setInputText}
                     />
                     <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-                        <Text style={{color: '#fff'}}>Kirim</Text>
+                        <Text style={{color: '#fff', fontWeight: '600'}}>Kirim</Text>
                     </TouchableOpacity>
                 </View>
             </Animated.View>
@@ -140,7 +147,9 @@ const styles = StyleSheet.create({
     padding: 10, 
     backgroundColor: theme.background, 
     borderTopWidth: 1, 
-    borderColor: theme.backgroundSecondary 
+    borderColor: theme.backgroundSecondary,
+    // Menambahkan paddingBottom ekstra untuk perangkat Android dengan gestur bar
+    paddingBottom: Platform.OS === 'android' ? 10 : 10 
   },
   input: { 
     flex: 1, 

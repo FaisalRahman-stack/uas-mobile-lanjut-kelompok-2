@@ -2,13 +2,12 @@ import React, { memo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { useSocialStore } from '../store/useSocialStore';
+import { Ionicons } from '@expo/vector-icons';
+import { theme } from '../utils/theme';
 
 const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onCommentPress }) => {
-  // Cek apakah user pembuat postingan ada di daftar following
   const { followingList } = useSocialStore();
   const isFollowing = followingList.includes(item.userId);
-
-  // Cek apakah user saat ini sudah menyukai postingan ini
   const isLiked = item.likes?.includes(currentUserId) || false;
   
   const formatPostDate = (timestamp) => {
@@ -19,23 +18,21 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
 
   return (
     <View style={styles.cardContainer}>
+      {/* Header */}
       <View style={styles.headerContainer}>
         <View style={styles.creatorProfile}>
-          <Image 
-            source={{ uri: item.userPhoto }} 
-            style={styles.avatarImage}
-            priority="high"
-            cachePolicy="disk"
-          />
+          <Image source={{ uri: item.userPhoto }} style={styles.avatarImage} priority="high" cachePolicy="disk" />
           <View style={styles.creatorInfo}>
-            <Text style={styles.usernameText}>{item.username}</Text>
+            <Text style={styles.usernameText}>
+              {item.displayName || item.username} 
+            </Text>
+            {/* Tanggal dipindah ke sini, menggantikan tag */}
             <Text style={styles.dateText}>{formatPostDate(item.createdAt)}</Text>
           </View>
         </View>
         
         {item.userId !== currentUserId && (
           <TouchableOpacity 
-            // Menggunakan isFollowing untuk menentukan warna tombol bawaan Anda
             style={[styles.actionButton, isFollowing ? styles.activeButton : styles.inactiveButton]}
             onPress={() => onFollowPress(item.userId)}
             activeOpacity={0.7}
@@ -47,6 +44,7 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
         )}
       </View>
 
+      {/* Main Image */}
       <Image 
         source={{ uri: item.imageUrl }} 
         style={styles.mainPostImage}
@@ -55,35 +53,24 @@ const PostCard = memo(({ item, currentUserId, onFollowPress, onLikePress, onComm
         cachePolicy="disk"
       />
 
+      {/* Interaction Bar */}
       <View style={styles.interactionButtonBar}>
         <View style={styles.leftInteractionGroup}>
-          <TouchableOpacity 
-            style={styles.iconScaleButton} 
-            onPress={() => onLikePress(item.postId)}
-            activeOpacity={0.6}
-          >
-            <Text style={styles.interactionIconText}>
-              {isLiked ? '❤️' : '🤍'}
-            </Text>
-            <Text style={styles.interactionCounterText}>
-              {item.likes?.length || 0}
-            </Text>
+          <TouchableOpacity style={styles.iconScaleButton} onPress={() => onLikePress(item.postId)}>
+            <Ionicons name={isLiked ? "heart" : "heart-outline"} size={24} color={isLiked ? theme.primary : theme.textSecondary} />
+            <Text style={styles.interactionCounterText}>{item.likes?.length || 0}</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={styles.iconScaleButton} 
-            onPress={() => onCommentPress(item.postId)}
-            activeOpacity={0.6}
-          >
-            <Text style={styles.interactionIconText}>💬</Text>
+          <TouchableOpacity style={styles.iconScaleButton} onPress={() => onCommentPress(item.postId)}>
+            <Ionicons name="chatbubble-outline" size={22} color={theme.textSecondary} />
             <Text style={styles.interactionCounterText}>Komentar</Text>
           </TouchableOpacity>
+          {/* Tanggal di sebelah komentar sudah dihapus */}
         </View>
       </View>
 
+      {/* Caption */}
       <View style={styles.metadataContentContainer}>
         <Text style={styles.captionTypography} numberOfLines={3}>
-          <Text style={styles.boldUsernameContext}>{item.username} </Text>
           {item.caption}
         </Text>
       </View>
@@ -95,11 +82,11 @@ PostCard.displayName = 'PostCard';
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: '#ffffff',
+    backgroundColor: theme.background,
     marginBottom: 8,
     paddingVertical: 12,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#E1E8ED',
+    borderBottomColor: theme.backgroundSecondary,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -116,7 +103,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#F5F8FA',
+    backgroundColor: theme.backgroundSecondary,
   },
   creatorInfo: {
     marginLeft: 12,
@@ -124,12 +111,12 @@ const styles = StyleSheet.create({
   usernameText: {
     fontWeight: '700',
     fontSize: 14,
-    color: '#14171A',
+    color: theme.textPrimary,
   },
   dateText: {
-    fontSize: 11,
-    color: '#657786',
-    marginTop: 2,
+    fontSize: 12,
+    color: theme.textSecondary,
+    marginTop: 1,
   },
   actionButton: {
     paddingHorizontal: 14,
@@ -138,25 +125,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   inactiveButton: {
-    backgroundColor: '#1DA1F2',
-    borderColor: '#1DA1F2',
+    backgroundColor: theme.primary,
+    borderColor: theme.primary,
   },
   activeButton: {
-    backgroundColor: '#ffffff',
-    borderColor: '#AAB8C2',
+    backgroundColor: theme.background,
+    borderColor: theme.secondary || theme.backgroundSecondary,
   },
   actionButtonText: {
-    color: '#ffffff',
+    color: theme.background,
     fontWeight: '600',
     fontSize: 12,
   },
   activeButtonText: {
-    color: '#657786',
+    color: theme.textSecondary,
   },
   mainPostImage: {
     width: '100%',
     aspectRatio: 1,
-    backgroundColor: '#F5F8FA',
+    backgroundColor: theme.backgroundSecondary,
   },
   interactionButtonBar: {
     flexDirection: 'row',
@@ -174,14 +161,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 24,
   },
-  interactionIconText: {
-    fontSize: 20,
-  },
   interactionCounterText: {
     marginLeft: 6,
     fontSize: 13,
     fontWeight: '600',
-    color: '#657786',
+    color: theme.textSecondary,
   },
   metadataContentContainer: {
     paddingHorizontal: 16,
@@ -190,10 +174,7 @@ const styles = StyleSheet.create({
   captionTypography: {
     fontSize: 14,
     lineHeight: 20,
-    color: '#14171A',
-  },
-  boldUsernameContext: {
-    fontWeight: '700',
+    color: theme.textPrimary,
   },
 });
 
