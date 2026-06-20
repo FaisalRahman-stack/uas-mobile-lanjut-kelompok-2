@@ -20,9 +20,14 @@ export default function ChatScreen({ route, navigation }) {
     const receiverId = targetUserId || 'user_lain';
     
     useEffect(() => {
-        if (userName) {
-            navigation.setOptions({ title: userName });
-        }
+        navigation.setOptions({
+            title: userName || 'Chat Room',
+            headerStyle: {
+                backgroundColor: theme.background, 
+            },
+            headerTintColor: theme.textPrimary, 
+            headerShadowVisible: false, 
+        });
 
         const unsubscribeFirestore = listenMessages(chatRoomId, (data) => {
             setMessages(data);
@@ -52,7 +57,7 @@ export default function ChatScreen({ route, navigation }) {
             showSubscription.remove();
             hideSubscription.remove();
         };
-    }, [chatRoomId, userName, navigation]); 
+    }, [chatRoomId, userName, navigation, theme]); 
 
     const handleSend = async () => {
         if (inputText.trim() === '') return;
