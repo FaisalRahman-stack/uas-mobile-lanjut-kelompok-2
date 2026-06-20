@@ -4,12 +4,7 @@ import FeedScreen from '../screens/FeedScreen';
 import SocialScreen from '../screens/SocialScreen';
 import { View, Text } from 'react-native';
 import { theme } from '../utils/theme';
-
-const ProfileScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background }}>
-    <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.textPrimary }}>Profile Screen</Text>
-  </View>
-);
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
